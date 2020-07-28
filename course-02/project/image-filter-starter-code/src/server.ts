@@ -28,14 +28,27 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
 
   /**************************************************************************** */
-
   //! END @TODO1
-  
+  app.get("/filteredimage", async (req,res));
+    try {
+      let trueImage = await req.query.match(/\.(jpeg|jpg|gif|png)$/);
+      if (trueImage){ //validate image_url query
+        let filteredPath = await filterImageFromURL(req.query.image_url); //call filterImageFromURL(image_url_)
+        res.status(200).sendFile(filteredPath); //send resulting file
+     }
+    }
+    catch (e) {
+        response.status(400).send(e); //catch error per rubric - invalid url
+    }
+
+  let toDelete: Array<string>;
+  toDelete = ['filteredPath'];
+  deleteLocalFiles(toDelete);//delete local files
   // Root Endpoint
   // Displays a simple message to the user
   app.get( "/", async ( req, res ) => {
     res.send("try GET /filteredimage?image_url={{}}")
-  } );
+  });
   
 
   // Start the Server

@@ -9,9 +9,11 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
   // Set the network port
   const port = process.env.PORT || 8082;
-  
+
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
+
+
 
   // @TODO1 IMPLEMENT A RESTFUL ENDPOINT
   // GET /filteredimage?image_url={{URL}}
@@ -26,30 +28,24 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //    image_url: URL of a publicly accessible image
   // RETURNS
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
-
+  app.get('/filteredimage', req: Request, res: Response) => {
+  image_url = req.params.image_url;
+  pathToImage = filterImageFromURL(image_url);
+  res.send(pathToImage);
+   let toDelete: Array<string>;
+    toDelete = ['pathToImage'];
+    deleteLocalFiles(toDelete);//delete local files
+  });
   /**************************************************************************** */
-  //! END @TODO1
-  app.get("/filteredimage", async (req,res));
-    try {
-      let trueImage = await req.query.match(/\.(jpeg|jpg|gif|png)$/);
-      if (trueImage){ //validate image_url query
-        let filteredPath = await filterImageFromURL(req.query.image_url); //call filterImageFromURL(image_url_)
-        res.status(200).sendFile(filteredPath); //send resulting file
-     }
-    }
-    catch (e) {
-        response.status(400).send(e); //catch error per rubric - invalid url
-    }
 
-  let toDelete: Array<string>;
-  toDelete = ['filteredPath'];
-  deleteLocalFiles(toDelete);//delete local files
+  //! END @TODO1
+
   // Root Endpoint
   // Displays a simple message to the user
   app.get( "/", async ( req, res ) => {
     res.send("try GET /filteredimage?image_url={{}}")
-  });
-  
+  } );
+
 
   // Start the Server
   app.listen( port, () => {
